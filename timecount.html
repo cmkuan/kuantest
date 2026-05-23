@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>專屬倒數計時器</title>
+    <title>垂直倒數計時器</title>
     <style>
-        /* 讓背景完全透明，這樣嵌入 Canva 時才不會有死白的方塊，能完美融入你的設計底色 */
+        /* 全透明背景，完美融入 Canva 底色 */
         body, html {
             margin: 0;
             padding: 0;
@@ -13,66 +13,107 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
         }
 
-        .countdown-container {
+        /* 主容器：強迫所有時間區塊垂直排列 */
+        .countdown-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 35px; /* 控制 天、時、分、秒 每個大區塊之間的上下間距 */
+        }
+
+        /* 單個時間單位容器（如：數字+天） */
+        .time-block {
             text-align: center;
-            /* 使用你指定的窄身字體清單 */
-            font-family: "Arial Narrow", "Impact", sans-serif; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        #days-number {
-            font-size: 140px; /* 數字放大，視覺張力更強 */
+        /* 數字樣式：窄身、粗體、深紅色 */
+        .number {
+            font-size: 110px; /* 可依需求調整數字大小 */
             font-weight: bold;
-            color: #800000;    /* 貼合你圖片的深紅色碼 */
-            line-height: 1;
-            letter-spacing: -2px;
+            color: #800000;    /* 你的專屬深紅色 */
+            font-family: "Arial Narrow", "Impact", sans-serif;
+            line-height: 0.9;
+            letter-spacing: -1px;
         }
 
+        /* 中文標籤樣式（天、時、分、秒） */
         .label {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: bold;
-            color: #800000;    /* 文字也是深紅色 */
-            margin-top: 15px;
-            font-family: "Microsoft JhengHei", sans-serif; /* 中文字體使用微軟正黑體 */
+            color: #800000;
+            font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+            margin-top: 8px; /* 控制數字與下方文字的微調距離 */
         }
     </style>
 </head>
 <body>
 
-<div class="countdown-container">
-    <div id="days-number">000</div>
-    <div class="label">天</div>
+<div class="countdown-vertical">
+    <div class="time-block">
+        <div class="number" id="days">000</div>
+        <div class="label">天</div>
+    </div>
+    
+    <div class="time-block">
+        <div class="number" id="hours">00</div>
+        <div class="label">時</div>
+    </div>
+    
+    <div class="time-block">
+        <div class="number" id="minutes">00</div>
+        <div class="label">分</div>
+    </div>
+    
+    <div class="time-block">
+        <div class="number" id="seconds">00</div>
+        <div class="label">秒</div>
+    </div>
 </div>
 
 <script>
-    // 🎯 請在此處設定你的目標日期與時間（格式：年-月-日T時:分:秒）
-    // 舉例：2026 年 10 月 17 日 晚上 18:00
+    // 🎯 設定你的目標日期與時間
     const TARGET_DATE = new Date("2026-10-17T18:00:00").getTime();
+
+    // 自動補零的輔助函式（讓 1 變成 01）
+    function formatTime(time) {
+        return time < 10 ? `0${time}` : time;
+    }
 
     function updateCountdown() {
         const now = new Date().getTime();
         const difference = TARGET_DATE - now;
 
         if (difference > 0) {
-            // 計算剩餘天數
-            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-            
-            // 將計算結果渲染到畫面上
-            document.getElementById("days-number").innerText = days;
+            // 計算 天、時、分、秒
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            // 渲染至網頁，並自動補零
+            document.getElementById("days").innerText = d;
+            document.getElementById("hours").innerText = formatTime(h);
+            document.getElementById("minutes").innerText = formatTime(m);
+            document.getElementById("seconds").innerText = formatTime(s);
         } else {
-            // 如果時間過了，就顯示 0
-            document.getElementById("days-number").innerText = "0";
+            // 時間截止時全歸零
+            document.getElementById("days").innerText = "0";
+            document.getElementById("hours").innerText = "00";
+            document.getElementById("minutes").innerText = "00";
+            document.getElementById("seconds").innerText = "00";
         }
     }
 
-    // 每隔 1 秒（1000毫秒）自動更新一次數字
+    // 每秒動態更新
     setInterval(updateCountdown, 1000);
-    
-    // 網頁載入時先執行一次，避免畫面一開始閃爍 000
-    updateCountdown();
+    updateCountdown(); // 首次載入先執行一次
 </script>
 
 </body>
