@@ -1,0 +1,46 @@
+<div class="countdown-container">
+    <div id="days-number">146</div>
+    <div class="label">天</div>
+</div>
+
+<style>
+    .countdown-container {
+        text-align: center;
+        font-family: "Arial Narrow", "Impact", sans-serif;
+    }
+    #days-number {
+        font-size: 120px;
+        font-weight: bold;
+        color: #800000; /* 你要的深紅色 */
+        line-height: 1;
+    }
+    .label {
+        font-size: 24px;
+        color: #800000;
+        margin-top: 10px;
+    }
+</style>
+
+<script>
+    // 設定你的目標日期（格式：年-月-日 時:分:秒）
+    const targetDate = new Date("2026-10-17T18:00:00").getTime();
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const difference = targetDate - now;
+
+        // 計算剩餘天數
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+
+        // 更新到網頁畫面上
+        if (difference > 0) {
+            document.getElementById("days-number").innerText = days;
+        } else {
+            document.getElementById("days-number").innerText = "0";
+        }
+    }
+
+    // 每秒更新一次
+    setInterval(updateCountdown, 1000);
+    updateCountdown(); // 初始化執行一次
+</script>
