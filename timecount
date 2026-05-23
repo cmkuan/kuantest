@@ -1,46 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專屬倒數計時器</title>
+    <style>
+        /* 讓背景完全透明，這樣嵌入 Canva 時才不會有死白的方塊，能完美融入你的設計底色 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: transparent; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .countdown-container {
+            text-align: center;
+            /* 使用你指定的窄身字體清單 */
+            font-family: "Arial Narrow", "Impact", sans-serif; 
+        }
+
+        #days-number {
+            font-size: 140px; /* 數字放大，視覺張力更強 */
+            font-weight: bold;
+            color: #800000;    /* 貼合你圖片的深紅色碼 */
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+
+        .label {
+            font-size: 28px;
+            font-weight: bold;
+            color: #800000;    /* 文字也是深紅色 */
+            margin-top: 15px;
+            font-family: "Microsoft JhengHei", sans-serif; /* 中文字體使用微軟正黑體 */
+        }
+    </style>
+</head>
+<body>
+
 <div class="countdown-container">
-    <div id="days-number">146</div>
+    <div id="days-number">000</div>
     <div class="label">天</div>
 </div>
 
-<style>
-    .countdown-container {
-        text-align: center;
-        font-family: "Arial Narrow", "Impact", sans-serif;
-    }
-    #days-number {
-        font-size: 120px;
-        font-weight: bold;
-        color: #800000; /* 你要的深紅色 */
-        line-height: 1;
-    }
-    .label {
-        font-size: 24px;
-        color: #800000;
-        margin-top: 10px;
-    }
-</style>
-
 <script>
-    // 設定你的目標日期（格式：年-月-日 時:分:秒）
-    const targetDate = new Date("2026-10-17T18:00:00").getTime();
+    // 🎯 請在此處設定你的目標日期與時間（格式：年-月-日T時:分:秒）
+    // 舉例：2026 年 10 月 17 日 晚上 18:00
+    const TARGET_DATE = new Date("2026-10-17T18:00:00").getTime();
 
     function updateCountdown() {
         const now = new Date().getTime();
-        const difference = targetDate - now;
+        const difference = TARGET_DATE - now;
 
-        // 計算剩餘天數
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-
-        // 更新到網頁畫面上
         if (difference > 0) {
+            // 計算剩餘天數
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            
+            // 將計算結果渲染到畫面上
             document.getElementById("days-number").innerText = days;
         } else {
+            // 如果時間過了，就顯示 0
             document.getElementById("days-number").innerText = "0";
         }
     }
 
-    // 每秒更新一次
+    // 每隔 1 秒（1000毫秒）自動更新一次數字
     setInterval(updateCountdown, 1000);
-    updateCountdown(); // 初始化執行一次
+    
+    // 網頁載入時先執行一次，避免畫面一開始閃爍 000
+    updateCountdown();
 </script>
+
+</body>
+</html>
